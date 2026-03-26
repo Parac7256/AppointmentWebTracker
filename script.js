@@ -80,50 +80,50 @@ window.enableNotifications = function() {
 };
 
 window.saveAppointment = function() {
-    const inputIds = ['clientName', 'appointmentDate', 'appointmentID', 'phone', 'category'];
+  
+    const inputIds = ['clientName', 'appointmentTime', 'clientID', 'phoneNumber', 'callReason'];
     let hasError = false;
 
     // 1. Validation Logic
     inputIds.forEach(id => {
         const el = document.getElementById(id);
-        if (el) { // Safety check to make sure the element exists
-            el.classList.remove('error-border'); // REMOVED THE EXTRA ; HERE
-            if (!el.value.trim()) {
-                el.classList.add('error-border');
-                if (!hasError) el.focus();
-                hasError = true;
-            }
+        el.classList.remove('error-border');
+        if (!el.value.trim()) {
+            el.classList.add('error-border');
+            if (!hasError) { el.focus(); hasError = true; }
         }
     });
 
     if (hasError) return;
 
-    // 2. Prepare Data (including the essential userId)
-    const appointmentData = {
+    // 2. 15-Minute Rounding Logic
+    let originalDate = new Date(document.getElementById('appointmentTime').value);
+    let minutes = originalDate.getMinutes();
+    let roundedMinutes = Math.round(minutes / 15) * 15;
+    originalDate.setMinutes(roundedMinutes);
+    originalDate.setSeconds(0);
+
+    // 3. Create Appointment Object
+    const newAppt = {
         name: document.getElementById('clientName').value,
-        date: document.getElementById('appointmentTime').value, 
-        appId: document.getElementById('appointmentID').value,
-        phone: document.getElementById('phone').value,
-        category: document.getElementById('category').value,
-        userId: auth.currentUser.uid, // Required for the refresh fix
-        createdAt: new Date().toISOString()
+        time: originalDate.toISOString(), 
+        id: document.getElementById('clientID').value,
+        phone: document.getElementById('phoneNumber').value,
+        reason: document.getElementById('callReason').value,
+        timestamp: originalDate.getTime()
     };
 
-    // 3. Save to Firestore
-    addDoc(collection(db, "appointments"), appointmentData)
-        .then(() => {
-            // 4. Clear Inputs (Put back your original logic)
-            inputIds.forEach(id => document.getElementById(id).value = "");
-            
-            // 5. Toggle UI (Hides form, shows button)
-            document.getElementById("SNA").style.display = "none";
-            document.getElementById("SNA1").style.display = "block";
-            
-            console.log("Saved and UI reset!");
-        })
-        .catch((error) => {
-            alert("Error saving: " + error.message);
-        });
+    // 4. Add and Sort (Soonest to Latest)
+    appointments.push(newAppt);
+    appointments.sort((a, b) => a.timestamp - b.timestamp);
+
+    renderAppointments();
+
+    // 5. Clear Inputs
+    inputIds.forEach(id => document.getElementById(id).value = "");
+  
+  document.getElementById("SNA").style.display = "none";  // Hides the input form
+    document.getElementById("SNA1").style.display = "block"; // Shows the trigger button
 };
 
 // --- Updated Countdown & Auto-Delete Logic ---
