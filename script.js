@@ -36,8 +36,8 @@ const q = query(
 
         onSnapshot(q, (snapshot) => {
             appointments = snapshot.docs.map(doc => ({ 
-                id: doc.id, 
-                ...doc.data() 
+              ...doc.data(),  
+              id: doc.id 
             }));
           renderAppointments(); 
         });
@@ -166,21 +166,18 @@ setInterval(() => {
 
 // --- MANUAL DELETE FUNCTION ---
 // Replace your code from Photo 5974a0.jpg with this:
-window.deleteAppointment = async function(id, index) {
-    if (confirm("Delete this forever?")) {
+window.deleteAppointment = async function(id) {
+    if (confirm("are you sure you want to delete this appointment?")) return;
         try {
             // 1. Remove it from the Cloud (This makes it stay gone)
-            await deleteDoc(doc(db, "appointments", id));
+            const docRef = doc(db, "appointments", id);
+            await deleteDoc(docRef);
             
-            // 2. Remove it from your local list so the screen updates immediately
-            appointments.splice(index, 1);
-            renderAppointments();
-            
-            console.log("Deleted from both Local and Cloud!");
+            console.log("Deleted");
         } catch (error) {
             console.error("Delete failed:", error);
+          alert("Error: " + error.message);
         }
-    }
 };
 
 // 3. RENDER WINDOW FUNCTION: Updated for Relative Dates (Today, Tomorrow, etc.)
@@ -221,7 +218,7 @@ window.renderAppointments = function() {
         li.innerHTML = `
             <div class="appt-actions">
                 <span class="countdown-timer" id="timer-${index}">...</span>
-<button class="cancel-btn" onclick="window.deleteAppointment('${appt.id}', ${index})">Cancel Appointment</button>
+<button class="cancel-btn" onclick="window.deleteAppointment('${appt.id}')">Cancel Appointment</button>
             </div>
             <div class="appt-info">
                 <strong>${relativeDateStr} at ${displayTime}</strong><br>
