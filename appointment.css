@@ -1,0 +1,307 @@
+﻿body {
+    /* 1. Point to the image file */
+    background-image: url('https://i.ibb.co/FN9Q8rj/Gemini-Generated-Image-dkm58kdkm58kdkm5.png'); /* Change this name to your actual image filename */
+
+    /* 2. Important sizing: Cover ensures the image stretches to fill the whole screen. */
+    background-size: cover;
+
+    /* 3. Stops the image from repeating (tiling) */
+    background-repeat: no-repeat;
+
+    /* 4. Keeps the image perfectly centered */
+    background-position: center;
+
+    /* 5. Keeps the background image fixed in place so your content scrolls over it. */
+    background-attachment: fixed;
+    
+    /* Optional: Sets a fallback background color while the image loads */
+    background-color: #f4f7f6; 
+}
+/* Targeting all text and date inputs in your form */
+input[type="text"], 
+input[type="datetime-local"] {
+    width: 100%;             /* Makes them fill the container width */
+    padding: 12px 16px;      /* Makes the input taller and roomier */
+    margin-bottom: 15px;     /* Adds space between each input */
+    
+    /* Font style inspired by the "Product Sans" aesthetic */
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    color: #333;
+
+    /* Border and Background */
+    background-color: #ffffff;
+    border: 2px solid #e0e0e0; /* Subtle grey border */
+    border-radius: 8px;        /* Soft rounded corners */
+    
+    /* Smooth transitions for interactive feel */
+    transition: all 0.3s ease;
+    outline: none;             /* Removes the default browser blue outline */
+}
+h1 {
+  /* A smooth blue gradient from top to bottom */
+    background: linear-gradient(180deg, #00a2ff 0%, #007dfe 100%);
+    
+    /* Text styling for readability */
+    color: #ffffff;
+    padding: 20px;
+    text-align: center;
+    border-radius: 0 0 15px 15px; /* Rounds only the bottom corners */
+    
+    /* Soft shadow to create a "Raised" effect */
+    box-shadow: 0 4px 12px rgba(0, 125, 254, 0.2);
+    
+    /* Clean geometric font */
+    font-family: 'Poppins', sans-serif;
+    letter-spacing: 1px; 
+}
+h3 {
+  background-color: rgb(152, 152, 82);
+  display: inline;
+  padding: 0 10px;
+  margin-bottom: 20px;
+}
+/* Effect when you click inside the input */
+input[type="text"]:focus, 
+input[type="datetime-local"]:focus {
+    border-color: #007dfe;     /* Highlights with your primary blue */
+    background-color: #fff;
+    
+    /* Adds a soft glow effect similar to a "Reflex" button */
+    box-shadow: 0 0 8px rgba(0, 125, 254, 0.2);
+}
+
+/* Styling the placeholder text */
+::placeholder {
+    color: #aaa;
+    font-weight: 400;
+}
+.SNA {
+  display: flex;;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: rgb(12, 120, 220);
+  font-size: 40px;
+  border: none;
+  border-radius: 40px;
+  padding: 0 20px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
+                0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  font-family: 'Poppins', sans-serif;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+.SNA:hover {
+  opacity: 0.7;
+}
+.SNA:active {
+  opacity: 0.3;
+  background-color: white;
+  color: rgb(12, 120, 220);
+}
+.appointment-form {
+    display: flex;
+    margin-right: auto;
+    margin-left: auto;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 300px;
+    margin-bottom: 30px;
+}
+
+#appointmentList li {
+    background: #f9f9f9;
+    padding: 10px;
+    border-left: 5px solid #007dfe; /* Blue accent like your 'Convenient' button */
+    margin-bottom: 5px;
+    list-style: none;
+}
+#appointmentList {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    min-height: 100px; /* Keeps the area visible even when empty */
+    list-style: none;
+}
+
+.empty-msg {
+    color: #888;
+    font-style: italic;
+    text-align: center;
+}
+
+#saveBtn {
+  display: flex;
+  margin-right: auto;
+  margin-left: auto;
+    background-color: #007dfe; /* Matching your previous blue theme */
+    color: white;
+    padding: 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+  font-size: 15px;
+}
+/* The class added by JavaScript when a field is empty */
+.error-border {
+    border: 2px solid #ff4d4d !important; /* Bright red border */
+    background-color: #fff9f9;           /* Very light red tint */
+}
+
+/* Optional: Add a shake animation to grab your attention */
+.error-border {
+    animation: shake 0.2s ease-in-out 0s 2;
+}
+
+@keyframes shake {
+    0% { margin-left: 0; }
+    25% { margin-left: 5px; }
+    75% { margin-left: -5px; }
+    100% { margin-left: 0; }
+}
+.back-link {
+  display: flex;
+  margin-right: auto;
+  margin-left: auto;
+    background-color: rgb(129, 120, 120);
+    color: white;
+    padding: 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+  font-size: 15px;
+}
+#saveBtn, .back-link {
+  display: inline-block;
+}
+/* Styling the Dropdown to match your inputs */
+select#callReason {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    background-color: white;
+}
+
+/* Color blocks for each reason */
+.bg-before-trip { background-color: #fff9c4 !important; border-left: 5px solid #fbc02d; } /* Light Yellow */
+.bg-after-trip  { background-color: #fff176 !important; border-left: 5px solid #f9a825; } /* Normal Yellow */
+.bg-booking     { background-color: #2e7d32 !important; border-left: 5px solid #388e3c; } /* Green */
+.bg-birthday    { background-color: #bbdefb !important; border-left: 5px solid #1976d2; } /* Blue */
+.bg-follow-up   { background-color: #dcffcc !important; border-left: 5px solid #7cb342; } /* Light Green */
+.bg-special     { background-color: #e1f5fe !important; border-left: 5px solid #03a9f4; } /* Light Blue */
+
+.appointment-item {
+    transition: transform 0.2s;
+    padding: 15px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+/* Styling the Copy Icon Button */
+.icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 2px 5px;
+    transition: transform 0.2s;
+    vertical-align: middle;
+}
+
+.icon-btn:hover { transform: scale(1.2); }
+
+/* Countdown Styling */
+.countdown-timer {
+    font-weight: bold;
+    color: #d73a49; /* Red for urgency */
+    background: rgba(255, 255, 255, 0.6);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 13px;
+    float: right;
+}
+/* Container for the Countdown and Cancel button */
+.appt-actions {
+    float: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    margin-left: 15px;
+}
+
+.countdown-timer {
+    font-weight: bold;
+    color: #d73a49;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 14px;
+    border: 1px solid rgba(215, 58, 73, 0.2);
+}
+
+.cancel-btn {
+    background: #fff;
+    border: 1px solid #ff4d4d;
+    color: #ff4d4d;
+    border-radius: 20px; /* Rounded reflex style */
+    padding: 4px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.cancel-btn:hover {
+    background: #ff4d4d;
+    color: white;
+}
+/*=============*/
+.floating-btn {
+    position: fixed;
+    left: 20px;
+    top: 20%;
+    transform: translateY(-50%);
+    z-index: 9999; /* This must be higher than other elements */
+    background: #2e7d32;
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: none;
+    font-size: 28px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    cursor: pointer;
+}
+
+.floating-btn {
+    position: fixed;
+    left: 15px;
+    top: 20%;
+    transform: translateY(-50%);
+    background: #2e7d32; /* Using your Lighter Green */
+    color: white;
+    text-decoration: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    font-size: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    z-index: 9999;
+    transition: 0.3s;
+}
+
+.floating-btn:hover {
+    background: #388e3c;
+    transform: translateY(-50%) scale(1.1);
+}

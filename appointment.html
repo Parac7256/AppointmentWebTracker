@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+<h1>APPOINTMENT TRACKER</h1>
+<div>
+  <button id="SNA1" class="SNA" onclick="SNA()">Schedule New Appointment</button>
+</div>
+
+<a href="https://www.worldtimebuddy.com/" target="_blank" id="timeShortcut" class="floating-btn">
+    🕒
+</a>
+
+<div id="SNA" class="appointment-form" style='display: none;'>
+  
+  <h3>Schedule New Appointment</h3>
+  <input type="text" id="clientName" placeholder="Enter client name...">
+  <input type="datetime-local" id="appointmentTime" step="900">
+  <input type="text" id="clientID" placeholder="Enter client ID....">
+  <input type="text" id="phoneNumber" placeholder="Enter client's phone number....">
+  <select id="callReason">
+    <option value="" disabled selected><i>Select Reason for Calling...</i></option>
+    <option value="before-trip">Before-trip reminders</option>
+    <option value="after-trip">After-trip call</option>
+    <option value="booking">Booking-schedule</option>
+    <option value="birthday">Birthday greetings call</option>
+    <option value="follow-up">Follow-up call</option>
+    <option value="special">Special-assistance-update</option>
+</select>
+  
+  <button class="back-link" onclick="back()">Back</button>
+  <button id="saveBtn" onclick="saveAppointment()">Save Appointments</button>
+</div>
+
+<div id="calendar-view">
+  <h3>Upcoming Appointments</h3>
+  <ul id="appointmentList"></ul>
+</div>
+
+  
+</body>
+</html>
