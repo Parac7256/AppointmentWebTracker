@@ -8,7 +8,68 @@
 <body>
 
     <div id="login-form" style="display: block; text-align: center; margin-top: 50px;">
+        <h2>Travel Consu<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Appointment Web Tracker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="login-form" style="display: block; text-align: center; margin-top: 50px;">
         <h2>Travel Consultant Tracker</h2>
+        <p>Please Sign In or Create an Account</p>
+        <div style="background: #f0fdf4; padding: 20px; border-radius: 10px; display: inline-block; border: 1px solid #bbf7d0;">
+            <input type="email" id="email" placeholder="Email" style="padding: 10px; margin: 5px; width: 250px;"><br>
+            <input type="password" id="password" placeholder="Password" style="padding: 10px; margin: 5px; width: 250px;"><br>
+            <button onclick="login()" style="padding: 10px 20px; background: #22c55e; color: white; border: none; cursor: pointer;">Sign In</button>
+            <button onclick="signUp()" style="padding: 10px 20px; background: #3b82f6; color: white; border: none; cursor: pointer;">Sign Up</button>
+        </div>
+    </div>
+
+    <div id="app-content" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px;">
+            <h1>APPOINTMENT TRACKER</h1>
+            <button onclick="logout()" style="background: #ef4444; color: white; border: none; padding: 8px;">Logout</button>
+        </div>
+
+        <div>
+            <button id="SNA1" class="SNA" onclick="SNA()">Schedule New Appointment</button>
+        </div>
+
+        <a href="https://www.worldtimebuddy.com/" target="_blank" id="timeShortcut" class="floating-btn">🕒</a>
+
+        <div id="SNA" class="appointment-form" style="display: none;">
+            <h3>Schedule New Appointment</h3>
+            <input type="text" id="clientName" placeholder="Enter client name...">
+            <input type="datetime-local" id="appointmentTime" step="900">
+            <input type="text" id="clientID" placeholder="Enter client ID...">
+            <input type="text" id="phoneNumber" placeholder="Enter client's phone number...">
+            
+            <select id="callReason">
+                <option value="" disabled selected>Select Reason for Calling...</option>
+                <option value="before-trip">Before-trip reminders</option>
+                <option value="after-trip">After-trip call</option>
+                <option value="booking">Booking-schedule</option>
+                <option value="birthday">Birthday greetings call</option>
+                <option value="follow-up">Follow-up call</option>
+                <option value="special">Special-assistance-update</option>
+            </select>
+
+            <button class="back-link" onclick="back()">Back</button>
+            <button id="saveBtn" onclick="saveAppointment()">Save Appointments</button>
+        </div>
+
+        <div id="calendar-view">
+            <h3>Upcoming Appointments</h3>
+            <ul id="appointmentList"></ul>
+        </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>ltant Tracker</h2>
         <p>Please Sign In or Create an Account</p>
         <div style="background: #f0fdf4; padding: 20px; border-radius: 10px; display: inline-block; border: 1px solid #bbf7d0;">
             <input type="email" id="email" placeholder="Email" style="padding: 10px; margin: 5px; width: 250px;"><br>
