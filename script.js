@@ -24,7 +24,7 @@ onAuthStateChanged(auth, (user) => {
         document.getElementById('login-form').style.display = 'none';
         document.getElementById('app-content').style.display = 'block';
 
-        const q =query(collection(db, "appointments"), where("userId, "==", user.uid));
+        const q =query(collection(db, "appointments"), where("userId", "==", user.uid));
 
         onSnapshot(q, (snapshot) => {
             appointments = snapshot.docs.map(doc => ({ 
