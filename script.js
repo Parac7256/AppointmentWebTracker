@@ -1,26 +1,26 @@
-// 1. Import the Firebase functions you need
+// --- Firebase Configuration & Initialization ---
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// 2. Your web app's Firebase configuration
-// REPLACE THESE WITH YOUR ACTUAL KEYS FROM FIREBASE SETTINGS
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
+  apiKey: "AIzaSyCFgm8z5o15HmSqLP3munlHo7vGh_ADBWA",
   authDomain: "appointment-web-70bb5.firebaseapp.com",
   projectId: "appointment-web-70bb5",
   storageBucket: "appointment-web-70bb5.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  messagingSenderId: "620129568290",
+  appId: "1:620129568290:web:5518e47512223f7260ec7b"
 };
 
-// 3. Initialize Firebase
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// Export for use in other functions
+// Making these available for your other functions
 export { auth, db };
+
+// --- Your existing window.SNA and other functions continue below ---
 
 let appointments = [];
 
@@ -190,14 +190,17 @@ window.copyText = (text, btnElement) => {
 };
 //=====================================
 
-//===============SNA++++++++++
 window.SNA = function() {
- document.getElementById("SNA1").style.display="none"; document.getElementById("SNA").style.display="block";
-}
-window.back = function() {
-  document.getElementById("SNA").style.display="none";
-document.getElementById("SNA1").style.display="block";
-}
+    const form = document.getElementById("SNA");
+    const btn = document.getElementById("SNA1");
+    if (form.style.display === "none" || form.style.display === "") {
+        form.style.display = "block";
+        btn.style.display = "none"; // Hides the button when form is open
+    } else {
+        form.style.display = "none";
+        btn.style.display = "block";
+    }
+};
 //==========================================
 // 4. Track Login Status
 onAuthStateChanged(auth, (user) => {
