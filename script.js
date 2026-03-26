@@ -42,11 +42,6 @@ window.signUp = () => {
 
 window.logout = () => signOut(auth);
 
-// 5. BOTTOM: Your original SNA, back, and copyText functions
-window.SNA = function() {
-    document.getElementById("SNA1").style.display="none"; 
-    document.getElementById("SNA").style.display="block";
-};
 
 window.back = function() {
     document.getElementById("SNA").style.display="none";
@@ -223,13 +218,14 @@ window.copyText = (text, btnElement) => {
 
 window.SNA = function() {
     const form = document.getElementById("SNA");
-    const btn = document.getElementById("SNA1");
+    const triggerBtn = document.getElementById("SNA1");
+
+    // This logic ensures if it's hidden, we show it; if shown, we hide it.
     if (form.style.display === "none" || form.style.display === "") {
-        form.style.display = "block";
-        btn.style.display = "none"; // Hides the button when form is open
+        form.style.display = "block";    // Show the input form
+        triggerBtn.style.display = "none"; // Hide the "Schedule" button
     } else {
         form.style.display = "none";
-        btn.style.display = "block";
+        triggerBtn.style.display = "block";
     }
 };
-//==========================================
