@@ -165,19 +165,15 @@ setInterval(() => {
 }, 1000);
 
 // --- MANUAL DELETE FUNCTION ---
-// Replace your code from Photo 5974a0.jpg with this:
 window.deleteAppointment = async function(id) {
-    if (confirm("are you sure you want to delete this appointment?")) return;
-        try {
-            // 1. Remove it from the Cloud (This makes it stay gone)
-            const docRef = doc(db, "appointments", id);
-            await deleteDoc(docRef);
-            
-            console.log("Deleted");
-        } catch (error) {
-            console.error("Delete failed:", error);
-          alert("Error: " + error.message);
-        }
+    console.log("Button Clicked! ID to delete:", id); // If you don't see this, the button is dead.
+    if (!confirm("Confirm Cancellation?")) return;
+    try {
+        await deleteDoc(doc(db, "appointments", id));
+        console.log("Cloud Success!");
+    } catch (err) {
+        console.error("Cloud Error:", err);
+    }
 };
 
 // 3. RENDER WINDOW FUNCTION: Updated for Relative Dates (Today, Tomorrow, etc.)
