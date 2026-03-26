@@ -31,6 +31,8 @@ onAuthStateChanged(auth, (user) => {
                 id: doc.id, 
                 ...doc.data() 
             }));
+          renderAppointments(); 
+        });
 
     } else {
         document.getElementById('login-form').style.display = 'block';
