@@ -86,11 +86,13 @@ window.saveAppointment = function() {
     // 1. Validation Logic
     inputIds.forEach(id => {
         const el = document.getElementById(id);
-        el.classList.remove('error-border');
-        if (!el.value.trim()) {
-            el.classList.add('error-border');
-            if (!hasError) el.focus();
-            hasError = true;
+        if (el) { // Safety check to make sure the element exists
+            el.classList.remove('error-border'); // REMOVED THE EXTRA ; HERE
+            if (!el.value.trim()) {
+                el.classList.add('error-border');
+                if (!hasError) el.focus();
+                hasError = true;
+            }
         }
     });
 
