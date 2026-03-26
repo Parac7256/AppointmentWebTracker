@@ -24,7 +24,7 @@ onAuthStateChanged(auth, (user) => {
         document.getElementById('login-form').style.display = 'none';
         document.getElementById('app-content').style.display = 'block';
 
-        const q =query(collection(db, "appointments"), where("userId", "==", user.uid));
+        const q = query(collection(db, "appointments"), where("userId", "==", user.uid));
 
         onSnapshot(q, (snapshot) => {
             appointments = snapshot.docs.map(doc => ({ 
@@ -80,50 +80,48 @@ window.enableNotifications = function() {
 };
 
 window.saveAppointment = function() {
-  
     const inputIds = ['clientName', 'appointmentTime', 'clientID', 'phoneNumber', 'callReason'];
     let hasError = false;
 
     // 1. Validation Logic
     inputIds.forEach(id => {
         const el = document.getElementById(id);
-        el.classList.remove('error-border');
-        if (!el.value.trim()) {
-            el.classList.add('error-border');
-            if (!hasError) { el.focus(); hasError = true; }
+        if (el) {
+            el.classList.remove('error-border');
+            if (!el.value.trim()) {
+                el.classList.add('error-border');
+                if (!hasError) el.focus();
+                hasError = true;
+            }
         }
     });
 
     if (hasError) return;
 
-    // 2. 15-Minute Rounding Logic
-    let originalDate = new Date(document.getElementById('appointmentTime').value);
-    let minutes = originalDate.getMinutes();
-    let roundedMinutes = Math.round(minutes / 15) * 15;
-    originalDate.setMinutes(roundedMinutes);
-    originalDate.setSeconds(0);
-
-    // 3. Create Appointment Object
-    const newAppt = {
+    // 2. Create the Data Object
+    const appointmentData = {
         name: document.getElementById('clientName').value,
-        time: originalDate.toISOString(), 
+        time: document.getElementById('appointmentTime').value,
         id: document.getElementById('clientID').value,
         phone: document.getElementById('phoneNumber').value,
         reason: document.getElementById('callReason').value,
-        timestamp: originalDate.getTime()
+        userId: auth.currentUser.uid, // <--- This links it to your account  
+        timestamp: new Date(document.getElementById('appointmentTime').value).getTime()
     };
 
-    // 4. Add and Sort (Soonest to Latest)
-    appointments.push(newAppt);
-    appointments.sort((a, b) => a.timestamp - b.timestamp);
-
-    renderAppointments();
-
-    // 5. Clear Inputs
-    inputIds.forEach(id => document.getElementById(id).value = "");
-  
-  document.getElementById("SNA").style.display = "none";  // Hides the input form
-    document.getElementById("SNA1").style.display = "block"; // Shows the trigger button
+    // 3. Send to Firestore (The part that makes it stay on refresh)
+    addDoc(collection(db, "appointments"), appointmentData)
+        .then(() => {
+            // Success! Clear inputs and hide form
+            inputIds.forEach(id => document.getElementById(id).value = "");
+            document.getElementById("SNA").style.display = "none";
+            document.getElementById("SNA1").style.display = "block";
+            console.log("Saved to Cloud!");
+        })
+        .catch((error) => {
+            console.error("Error saving:", error);
+            alert("Failed to save. Check your internet or login status.");
+        });
 };
 
 // --- Updated Countdown & Auto-Delete Logic ---
@@ -159,10 +157,16 @@ setInterval(() => {
 }, 1000);
 
 // --- MANUAL DELETE FUNCTION ---
-window.deleteAppointment = function(index) {
+// Replace your code from Photo 5974a0.jpg with this:
+window.deleteAppointment = async function(id) {
     if (confirm("Are you sure you want to cancel this appointment?")) {
-        appointments.splice(index, 1);
-        renderAppointments();
+        try {
+            // This reaches into the cloud to delete it permanently
+            await deleteDoc(doc(db, "appointments", id));
+            console.log("Deleted forever!");
+        } catch (error) {
+            console.error("Error deleting:", error);
+        }
     }
 };
 
