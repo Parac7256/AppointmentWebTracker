@@ -17,7 +17,7 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 // 3. THE BOUNCER: Logic to switch between Login and App
-oonAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, (user) => {
     if (user) {
         // ... (your existing code to show app-content) ...
 
