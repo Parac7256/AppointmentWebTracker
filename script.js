@@ -12,15 +12,46 @@ const firebaseConfig = {
   appId: "1:620129568290:web:5518e47512223f7260ec7b"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// Making these available for your other functions
-export { auth, db };
+// 3. THE BOUNCER: Logic to switch between Login and App
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        document.getElementById('login-form').style.display = 'none';
+        document.getElementById('app-content').style.display = 'block';
+    } else {
+        document.getElementById('login-form').style.display = 'block';
+        document.getElementById('app-content').style.display = 'none';
+    }
+});
 
-// --- Your existing window.SNA and other functions continue below ---
+// 4. GLOBAL FUNCTIONS: For your HTML buttons
+window.login = () => {
+    const e = document.getElementById('email').value;
+    const p = document.getElementById('password').value;
+    signInWithEmailAndPassword(auth, e, p).catch(err => alert(err.message));
+};
+
+window.signUp = () => {
+    const e = document.getElementById('email').value;
+    const p = document.getElementById('password').value;
+    createUserWithEmailAndPassword(auth, e, p).then(() => alert("Account Created!")).catch(err => alert(err.message));
+};
+
+window.logout = () => signOut(auth);
+
+// 5. BOTTOM: Your original SNA, back, and copyText functions
+window.SNA = function() {
+    document.getElementById("SNA1").style.display="none"; 
+    document.getElementById("SNA").style.display="block";
+};
+
+window.back = function() {
+    document.getElementById("SNA").style.display="none";
+    document.getElementById("SNA1").style.display="block";
+};
 
 let appointments = [];
 
@@ -202,31 +233,3 @@ window.SNA = function() {
     }
 };
 //==========================================
-// 4. Track Login Status
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        // User is signed in
-        console.log("Logged in as:", user.email);
-        document.getElementById('login-form').style.display = 'none';
-        document.getElementById('app-content').style.display = 'block';
-        
-        // Load only THIS user's appointments
-        loadAppointments(user.uid);
-    } else {
-        // User is signed out
-        document.getElementById('login-form').style.display = 'block';
-        document.getElementById('app-content').style.display = 'none';
-    }
-});
-
-// 5. Function to save a new flight (tagged with your User ID)
-async function saveFlight(flightDetails) {
-    const user = auth.currentUser;
-    if (user) {
-        await addDoc(collection(db, "appointments"), {
-            ...flightDetails,
-            userId: user.uid, // This keeps it specific to you
-            timestamp: new Date()
-        });
-    }
-}
