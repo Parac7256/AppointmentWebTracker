@@ -1,7 +1,10 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 // Added createUserWithEmailAndPassword, signInWithEmailAndPassword, and signOut below:
 import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+// Add 'orderBy' to this line in your script
+import { 
+    getFirestore, collection, addDoc, query, where, onSnapshot, doc, deleteDoc, orderBy 
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCFgm8z5o15HmSqLP3munlHo7vGh_ADBWA",
@@ -24,7 +27,12 @@ onAuthStateChanged(auth, (user) => {
         document.getElementById('login-form').style.display = 'none';
         document.getElementById('app-content').style.display = 'block';
 
-        const q = query(collection(db, "appointments"), where("userId", "==", user.uid));
+        // This is the part from your photo 5a67ad.jpg
+const q = query(
+    collection(db, "appointments"), 
+    where("userId", "==", user.uid), 
+    orderBy("timestamp", "asc") // 'asc' means soonest (smallest number) first
+);
 
         onSnapshot(q, (snapshot) => {
             appointments = snapshot.docs.map(doc => ({ 
@@ -158,14 +166,19 @@ setInterval(() => {
 
 // --- MANUAL DELETE FUNCTION ---
 // Replace your code from Photo 5974a0.jpg with this:
-window.deleteAppointment = async function(id) {
-    if (confirm("Are you sure you want to cancel this appointment?")) {
+window.deleteAppointment = async function(id, index) {
+    if (confirm("Delete this forever?")) {
         try {
-            // This reaches into the cloud to delete it permanently
+            // 1. Remove it from the Cloud (This makes it stay gone)
             await deleteDoc(doc(db, "appointments", id));
-            console.log("Deleted forever!");
+            
+            // 2. Remove it from your local list so the screen updates immediately
+            appointments.splice(index, 1);
+            renderAppointments();
+            
+            console.log("Deleted from both Local and Cloud!");
         } catch (error) {
-            console.error("Error deleting:", error);
+            console.error("Delete failed:", error);
         }
     }
 };
@@ -208,7 +221,7 @@ window.renderAppointments = function() {
         li.innerHTML = `
             <div class="appt-actions">
                 <span class="countdown-timer" id="timer-${index}">...</span>
-                <button class="cancel-btn" onclick="window.deleteAppointment(${index})">Cancel Appointment</button>
+<button class="cancel-btn" onclick="window.deleteAppointment('${appt.id}', ${index})">Cancel Appointment</button>
             </div>
             <div class="appt-info">
                 <strong>${relativeDateStr} at ${displayTime}</strong><br>
@@ -246,3 +259,5 @@ window.SNA = function() {
         triggerBtn.style.display = "block";
     }
 };
+//==================================================
+
