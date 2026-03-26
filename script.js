@@ -101,7 +101,7 @@ window.saveAppointment = function() {
     // 2. Prepare Data (including the essential userId)
     const appointmentData = {
         name: document.getElementById('clientName').value,
-        date: document.getElementById('appointmentDate').value, 
+        date: document.getElementById('appointmentTime').value, 
         appId: document.getElementById('appointmentID').value,
         phone: document.getElementById('phone').value,
         category: document.getElementById('category').value,
