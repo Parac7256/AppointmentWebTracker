@@ -21,9 +21,17 @@ onAuthStateChanged(auth, (user) => {
     if (user) {
         document.getElementById('login-form').style.display = 'none';
         document.getElementById('app-content').style.display = 'block';
+
+        // This "listens" to the database and updates your screen automatically
+        const q = query(collection(db, "appointments"), where("userId", "==", user.uid));
+        onSnapshot(q, (snapshot) => {
+            appointments = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            renderAppointments(); 
+        });
     } else {
         document.getElementById('login-form').style.display = 'block';
         document.getElementById('app-content').style.display = 'none';
+        appointments = []; 
     }
 });
 
@@ -66,39 +74,41 @@ window.enableNotifications = function() {
     }
 };
 
-window.saveAppointment = function() {
-  
-    const inputIds = ['clientName', 'appointmentTime', 'clientID', 'phoneNumber', 'callReason'];
-    let hasError = false;
+window.saveAppointment = async function() {
+    const clientName = document.getElementById("clientName").value;
+    const appointmentTime = document.getElementById("appointmentTime").value;
+    const clientID = document.getElementById("clientID").value;
+    const phoneNumber = document.getElementById("phoneNumber").value;
+    const callReason = document.getElementById("callReason").value;
 
-    // 1. Validation Logic
-    inputIds.forEach(id => {
-        const el = document.getElementById(id);
-        el.classList.remove('error-border');
-        if (!el.value.trim()) {
-            el.classList.add('error-border');
-            if (!hasError) { el.focus(); hasError = true; }
+    if (clientName && appointmentTime && clientID && phoneNumber && callReason) {
+        const newAppt = { clientName, appointmentTime, clientID, phoneNumber, callReason };
+
+        try {
+            // This line sends the data to Firebase permanently
+            await addDoc(collection(db, "appointments"), {
+                ...newAppt,
+                userId: auth.currentUser.uid 
+            });
+            
+            // Clear the form and hide it
+            document.getElementById("SNA").style.display = "none";
+            document.getElementById("SNA1").style.display = "block";
+            
+            // Clear inputs
+            document.getElementById("clientName").value = "";
+            document.getElementById("appointmentTime").value = "";
+            document.getElementById("clientID").value = "";
+            document.getElementById("phoneNumber").value = "";
+            document.getElementById("callReason").value = "";
+
+        } catch (e) {
+            alert("Error saving: " + e.message);
         }
-    });
-
-    if (hasError) return;
-
-    // 2. 15-Minute Rounding Logic
-    let originalDate = new Date(document.getElementById('appointmentTime').value);
-    let minutes = originalDate.getMinutes();
-    let roundedMinutes = Math.round(minutes / 15) * 15;
-    originalDate.setMinutes(roundedMinutes);
-    originalDate.setSeconds(0);
-
-    // 3. Create Appointment Object
-    const newAppt = {
-        name: document.getElementById('clientName').value,
-        time: originalDate.toISOString(), 
-        id: document.getElementById('clientID').value,
-        phone: document.getElementById('phoneNumber').value,
-        reason: document.getElementById('callReason').value,
-        timestamp: originalDate.getTime()
-    };
+    } else {
+        alert("Please fill out all fields.");
+    }
+};
 
     // 4. Add and Sort (Soonest to Latest)
     appointments.push(newAppt);
