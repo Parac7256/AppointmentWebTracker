@@ -66,45 +66,44 @@ window.enableNotifications = function() {
     }
 };
 
-window.saveAppointment = function() {
-  
-    const inputIds = ['clientName', 'appointmentTime', 'clientID', 'phoneNumber', 'callReason'];
-    let hasError = false;
+window.saveAppointment = async function() {
+    const clientName = document.getElementById("clientName").value;
+    const appointmentTime = document.getElementById("appointmentTime").value;
+    const clientID = document.getElementById("clientID").value;
+    const phoneNumber = document.getElementById("phoneNumber").value;
+    const callReason = document.getElementById("callReason").value;
 
-    // 1. Validation Logic
-    inputIds.forEach(id => {
-        const el = document.getElementById(id);
-        el.classList.remove('error-border');
-        if (!el.value.trim()) {
-            el.classList.add('error-border');
-            if (!hasError) { el.focus(); hasError = true; }
+    if (clientName && appointmentTime && clientID && phoneNumber && callReason) {
+        const newAppt = { clientName, appointmentTime, clientID, phoneNumber, callReason };
+
+        try {
+            // This line physically uploads the data to the Google Cloud
+            await addDoc(collection(db, "appointments"), {
+                ...newAppt,
+                userId: auth.currentUser.uid // This ensures ONLY YOU see your data
+            });
+
+            // Hide the form and reset buttons
+            document.getElementById("SNA").style.display = "none";
+            document.getElementById("SNA1").style.display = "block";
+            
+            // Clear the boxes for the next entry
+            document.getElementById("clientName").value = "";
+            document.getElementById("appointmentTime").value = "";
+            document.getElementById("clientID").value = "";
+            document.getElementById("phoneNumber").value = "";
+            document.getElementById("callReason").value = "";
+
+            alert("Appointment Synced to Cloud!");
+
+        } catch (e) {
+            console.error("Firebase Error:", e);
+            alert("Sync Failed: " + e.message);
         }
-    });
-
-    if (hasError) return;
-
-    // 2. 15-Minute Rounding Logic
-    let originalDate = new Date(document.getElementById('appointmentTime').value);
-    let minutes = originalDate.getMinutes();
-    let roundedMinutes = Math.round(minutes / 15) * 15;
-    originalDate.setMinutes(roundedMinutes);
-    originalDate.setSeconds(0);
-
-    // 3. Create Appointment Object
-    const newAppt = {
-        name: document.getElementById('clientName').value,
-        time: originalDate.toISOString(), 
-        id: document.getElementById('clientID').value,
-        phone: document.getElementById('phoneNumber').value,
-        reason: document.getElementById('callReason').value,
-        timestamp: originalDate.getTime()
-    };
-
-    // 4. Add and Sort (Soonest to Latest)
-    appointments.push(newAppt);
-    appointments.sort((a, b) => a.timestamp - b.timestamp);
-
-    renderAppointments();
+    } else {
+        alert("Please fill out all fields.");
+    }
+};
 
     // 5. Clear Inputs
     inputIds.forEach(id => document.getElementById(id).value = "");
