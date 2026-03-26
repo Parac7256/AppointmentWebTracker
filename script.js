@@ -1,3 +1,27 @@
+// 1. Import the Firebase functions you need
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+// 2. Your web app's Firebase configuration
+// REPLACE THESE WITH YOUR ACTUAL KEYS FROM FIREBASE SETTINGS
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "appointment-web-70bb5.firebaseapp.com",
+  projectId: "appointment-web-70bb5",
+  storageBucket: "appointment-web-70bb5.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
+
+// 3. Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// Export for use in other functions
+export { auth, db };
+
 let appointments = [];
 
 window.enableNotifications = function() {
@@ -174,55 +198,32 @@ window.back = function() {
   document.getElementById("SNA").style.display="none";
 document.getElementById("SNA1").style.display="block";
 }
-//====converter=
-// 1. Initialize the toggle function immediately
-window.toggleConverter = function() {
-    const popup = document.getElementById("timeConverter");
-    if (!popup) return;
-    popup.style.display = (popup.style.display === "none" || popup.style.display === "") ? "block" : "none";
-};
-
-// 2. Search Logic for North America
-let currentOriginOffset = -5; // Default Eastern Time
-
-window.findLocationTime = function() {
-    const query = document.getElementById("citySearch").value.toLowerCase();
-    const status = document.getElementById("searchStatus");
-    
-    // Simple mapping for North American Zones (Daylight Savings 2026)
-    if (query.match(/la|pacific|vancouver|seattle|california|nevada|oregon|bc/)) {
-        currentOriginOffset = -7;
-    } else if (query.match(/denver|mountain|phoenix|arizona|alberta|utah|colorado/)) {
-        currentOriginOffset = -6;
-    } else if (query.match(/chicago|central|texas|dallas|houston|winnipeg|mexico/)) {
-        currentOriginOffset = -5;
-    } else if (query.match(/ny|new york|eastern|toronto|florida|miami|dc|quebec/)) {
-        currentOriginOffset = -4;
+//==========================================
+// 4. Track Login Status
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        // User is signed in
+        console.log("Logged in as:", user.email);
+        document.getElementById('login-form').style.display = 'none';
+        document.getElementById('app-content').style.display = 'block';
+        
+        // Load only THIS user's appointments
+        loadAppointments(user.uid);
     } else {
-        alert("Location not recognized. Defaulting to Eastern Time.");
-        currentOriginOffset = -4;
+        // User is signed out
+        document.getElementById('login-form').style.display = 'block';
+        document.getElementById('app-content').style.display = 'none';
     }
-    
-    status.innerText = "Zone Set! Adjust local time below.";
-    window.updateManilaResult();
-};
+});
 
-window.updateManilaResult = function() {
-    const timeVal = document.getElementById("inputTime").value;
-    if (!timeVal) return;
-
-    const [hours, minutes] = timeVal.split(':').map(Number);
-    const diff = 8 - currentOriginOffset;
-    let manilaHours = hours + diff;
-    
-    let dayStatus = "Today";
-    if (manilaHours >= 24) { manilaHours -= 24; dayStatus = "Tomorrow"; }
-    else if (manilaHours < 0) { manilaHours += 24; dayStatus = "Yesterday"; }
-    
-    const period = manilaHours >= 12 ? 'PM' : 'AM';
-    const displayHours = manilaHours % 12 || 12;
-    const displayMinutes = minutes < 10 ? '0' + minutes : minutes;
-    
-    document.getElementById("manilaResult").innerHTML = 
-        `${displayHours}:${displayMinutes} ${period}<br><small style="font-size:11px; color:#2e7d32;">(${dayStatus} in Manila)</small>`;
-};
+// 5. Function to save a new flight (tagged with your User ID)
+async function saveFlight(flightDetails) {
+    const user = auth.currentUser;
+    if (user) {
+        await addDoc(collection(db, "appointments"), {
+            ...flightDetails,
+            userId: user.uid, // This keeps it specific to you
+            timestamp: new Date()
+        });
+    }
+}
