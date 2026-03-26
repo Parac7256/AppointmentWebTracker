@@ -17,6 +17,8 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 // 3. THE BOUNCER: Logic to switch between Login and App
+let appointments = [];
+
 onAuthStateChanged(auth, (user) => {
     if (user) {
         document.getElementById('login-form').style.display = 'none';
@@ -56,7 +58,6 @@ window.back = function() {
     document.getElementById("SNA1").style.display="block";
 };
 
-let appointments = [];
 
 window.enableNotifications = function() {
     if (!("Notification" in window)) {
