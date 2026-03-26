@@ -21,9 +21,17 @@ onAuthStateChanged(auth, (user) => {
     if (user) {
         document.getElementById('login-form').style.display = 'none';
         document.getElementById('app-content').style.display = 'block';
+
+        // This "listens" to the database and updates your screen automatically
+        const q = query(collection(db, "appointments"), where("userId", "==", user.uid));
+        onSnapshot(q, (snapshot) => {
+            appointments = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            renderAppointments(); 
+        });
     } else {
         document.getElementById('login-form').style.display = 'block';
         document.getElementById('app-content').style.display = 'none';
+        appointments = []; 
     }
 });
 
