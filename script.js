@@ -11,35 +11,30 @@ const firebaseConfig = {
   messagingSenderId: "620129568290",
   appId: "1:620129568290:web:5518e47512223f7260ec7b"
 };
+let appointments = [];
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const q =query(collection(db, "appointments"), where("userId, "==", user.uid));
+
+
 
 // 3. THE BOUNCER: Logic to switch between Login and App
 onAuthStateChanged(auth, (user) => {
     if (user) {
-        // ... (your existing code to show app-content) ...
+        document.getElementById('login-form').style.display = 'none';
+        document.getElementById('app-content').style.display = 'block';
 
-        // 1. Define the "Search" (The Query)
-        const q = query(collection(db, "appointments"), where("userId", "==", user.uid));
-
-        // 2. Start the "Listener" (The Snapshot)
         onSnapshot(q, (snapshot) => {
             appointments = snapshot.docs.map(doc => ({ 
                 id: doc.id, 
                 ...doc.data() 
             }));
-            
-            // 3. Update the Screen
-            renderAppointments();
-            console.log("Data loaded for user:", user.uid);
-        });
 
     } else {
-        // ... (your existing code to show login-form) ...
-        appointments = [];
-        renderAppointments();
+        document.getElementById('login-form').style.display = 'block';
+        document.getElementById('app-content').style.display = 'none';
     }
 });
 
@@ -64,7 +59,7 @@ window.back = function() {
     document.getElementById("SNA1").style.display="block";
 };
 
-let appointments = [];
+
 
 window.enableNotifications = function() {
     if (!("Notification" in window)) {
