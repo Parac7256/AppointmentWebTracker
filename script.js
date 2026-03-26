@@ -16,8 +16,6 @@ let appointments = [];
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-const q =query(collection(db, "appointments"), where("userId, "==", user.uid));
-
 
 
 // 3. THE BOUNCER: Logic to switch between Login and App
@@ -25,6 +23,8 @@ onAuthStateChanged(auth, (user) => {
     if (user) {
         document.getElementById('login-form').style.display = 'none';
         document.getElementById('app-content').style.display = 'block';
+
+        const q =query(collection(db, "appointments"), where("userId, "==", user.uid));
 
         onSnapshot(q, (snapshot) => {
             appointments = snapshot.docs.map(doc => ({ 
