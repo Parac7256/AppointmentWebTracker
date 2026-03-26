@@ -17,13 +17,29 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 // 3. THE BOUNCER: Logic to switch between Login and App
-onAuthStateChanged(auth, (user) => {
+oonAuthStateChanged(auth, (user) => {
     if (user) {
-        document.getElementById('login-form').style.display = 'none';
-        document.getElementById('app-content').style.display = 'block';
+        // ... (your existing code to show app-content) ...
+
+        // 1. Define the "Search" (The Query)
+        const q = query(collection(db, "appointments"), where("userId", "==", user.uid));
+
+        // 2. Start the "Listener" (The Snapshot)
+        onSnapshot(q, (snapshot) => {
+            appointments = snapshot.docs.map(doc => ({ 
+                id: doc.id, 
+                ...doc.data() 
+            }));
+            
+            // 3. Update the Screen
+            renderAppointments();
+            console.log("Data loaded for user:", user.uid);
+        });
+
     } else {
-        document.getElementById('login-form').style.display = 'block';
-        document.getElementById('app-content').style.display = 'none';
+        // ... (your existing code to show login-form) ...
+        appointments = [];
+        renderAppointments();
     }
 });
 
