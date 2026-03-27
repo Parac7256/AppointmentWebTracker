@@ -110,7 +110,7 @@ window.saveAppointment = function() {
     const appointmentData = {
         name: document.getElementById('clientName').value,
         time: document.getElementById('appointmentTime').value,
-        id: document.getElementById('clientID').value,
+        Id: document.getElementById('clientID').value,
         phone: document.getElementById('phoneNumber').value,
         reason: document.getElementById('callReason').value,
         userId: auth.currentUser.uid, // <--- This links it to your account  
@@ -219,7 +219,7 @@ window.renderAppointments = function() {
             <div class="appt-info">
                 <strong>${relativeDateStr} at ${displayTime}</strong><br>
                 👤 ${appt.name} <br>
-                ID: <code>${appt.id}</code> 
+                ID: <code>${appt.Id}</code> 
                 <button class="icon-btn" onclick="window.copyText('${appt.id}', this)">📋</button><br>
                 📞 ${appt.phone} 
                 <button class="icon-btn" onclick="window.copyText('${appt.phone}', this)">📋</button><br>
